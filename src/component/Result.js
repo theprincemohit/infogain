@@ -1,27 +1,32 @@
 function Result(props) {
+  const {resultdata} =  props
   return (
     <div>
      
         <table class="table table-bordered">
     <thead>
       <tr className="bg-primary">
-        <th>Id</th>
-        <th>Nane</th>
-        <th>gender</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Street</th>
+        <th>Country Code</th>
+        <th>Postal Code</th>
       </tr>
     </thead>
     <tbody>
       {
-        (props.resultdata.length > 0) ?
-        props.resultdata.map((data)=> {
-          return (
+        (resultdata.address) ?
+        
+        
+         
             <tr>
-            <td>{data._id}</td>
-            <td>{data.name}</td>
-            <td>{data.gender}</td>
+            <td>{resultdata.address.lat}</td>
+            <td>{resultdata.address.lat}</td>
+            <td>{resultdata.address.street}</td>
+            <td>{resultdata.address.countryCode}</td>
+            <td>{resultdata.address.postalcode}</td>
           </tr>
-          )
-        })
+         
         : <tr><td>No Data Found</td></tr>
       }
      

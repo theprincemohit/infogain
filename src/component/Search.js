@@ -1,6 +1,7 @@
-import datalist from '../search-list.json'
+import Api from '../services/Api'
 import SearchInput from './SearchInput'
 import List from './List'
+import History from './History'
 import { useState } from 'react';
 
 
@@ -8,9 +9,11 @@ function Search() {
   const [name, setName] = useState('');
   const [result, setResult] = useState([]);
   const [Isloading, setIsloading] = useState(false)
-  const getData = () => {
-    return datalist.filter((data) => data.name.toLowerCase().includes(name.toLowerCase()))
+  const [history, setHistory] = useState([])
+  const getHistoryData = (name) => {
+     return history.filter((data) =>  (data[name]))
   }
+
 
   const handleSubmit = async () => {
     if(name.length == 0)
@@ -19,8 +22,29 @@ function Search() {
       return false;
     }
     setIsloading(true)
-    const filterdata = await getData()
-    await setResult(filterdata)
+     
+    const CheckHistory = await getHistoryData(name);
+     
+    if(CheckHistory.length > 0)
+    {
+      
+      await setResult(CheckHistory[0][name])
+      
+    }
+    else
+    {
+      
+      const filterdata = await Api(name)
+      await setResult(filterdata)
+      if(filterdata.address)
+      {
+        
+        await setHistory([...history, {[name] : filterdata} ]);
+         
+      }
+      
+      }
+    
     await setIsloading(false)
   }
   const handleInput = (e) => {
@@ -29,12 +53,14 @@ function Search() {
   }
   return (
     <div>
-        
+        <History history={history}></History>
       <SearchInput
         handleSubmit={handleSubmit}
         handleInput={handleInput}
       ></SearchInput>
-      {
+      {console.log('historyv123v',history)
+      }
+      {  
         (Isloading) ? 'Fetching Data...' : 
 
         <List resultdata={result}></List>
